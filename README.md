@@ -28,7 +28,6 @@ Most material settings are supported:
 * Specular - Value or texturemap
 * Smoothness
 * Translucency
-* Emission - RGB color or texturemap
 * IOR - Value 1-2.5
 * Bump map with scale
 
