@@ -31,10 +31,6 @@ Most material settings are supported:
 * IOR - Value 1-2.5
 * Bump map with scale
 
-#### Notice
-Public servers are disabled when this mod is enabled, only people with the mod will be able to join lobbies created when this plugin is enabled.
-To re-enable public servers move the MapMod.dll out of the plugins folder.
-
 ### Keybinds
 * F6 to open/close the menu
 * F5 to respawn
