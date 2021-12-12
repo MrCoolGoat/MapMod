@@ -97,7 +97,7 @@ namespace MapMod
 							/*material.SetOverrideTag("RenderType", "TransparentCutout");
 							Color color = material.color;
 							material.SetColor("_BaseColor", color);
-							material.SetTexture("_BaseColorMap", LoadTexture(texture, false));
+							material.SetTexture("_BaseColorMap", TexturesAndColors.LoadTexture(texture, false));
 							material.SetInt("_DoubleSidedEnable", 1);
 							material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
 							material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);

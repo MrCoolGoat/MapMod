@@ -10,7 +10,7 @@ using Cinemachine;
 
 namespace MapMod
 {
-	[BepInPlugin("map.mod.goat", "MapMod", "1.7.0")]
+	[BepInPlugin("map.mod.goat", "MapMod", "1.8.0")]
 	public class Main : BaseUnityPlugin
 	{
 		static Main()
@@ -20,7 +20,7 @@ namespace MapMod
 
 		void Start()
 		{
-			Application.runInBackground = false;
+
 			OGmatrix = GUI.matrix;
 		}
 		void Update()
@@ -66,7 +66,7 @@ namespace MapMod
 							{
 								en.onSubmit.AddListener(DeactivateMaps);
 								newGo = Instantiate(t[i].gameObject, t[i].gameObject.transform.parent);
-								newGo.transform.localPosition = new Vector3(t[i].gameObject.transform.localPosition.x, 221f, t[i].gameObject.transform.localPosition.z);
+								newGo.transform.localPosition = new Vector3(t[i].gameObject.transform.localPosition.x + 550, t[i].gameObject.transform.localPosition.y, t[i].gameObject.transform.localPosition.z);
 								newGo.name = "ModdedRooms";
 								ElementNavigate en2 = newGo.GetComponent<ElementNavigate>();
 								en2.onSubmit.AddListener(ActivateMaps);
@@ -128,6 +128,10 @@ namespace MapMod
 					TextMeshProUGUI tmp = newGo.GetComponentInChildren<TextMeshProUGUI>();
 					if (tmp != null)
 					{
+						Vector2 v = new Vector2();
+						v.x = 270;
+						v.y = 190;
+						tmp.rectTransform.sizeDelta = v;
 						tmp.transform.gameObject.SetActive(false);
 						tmp.text = "MODDED MAP ROOM LIST";
 						tmp.ForceMeshUpdate(true, true);
@@ -240,9 +244,11 @@ namespace MapMod
 			GUIStyle guistyle5 = new GUIStyle();
 			guistyle5.fontSize = 50;
 			guistyle5.normal.textColor = Color.white;
-			GUI.Label(new Rect(10f, 30f, 500f, 100f), "Goats Custom Map Loader V1.7", guistyle);
+			GUI.Label(new Rect(10f, 30f, 500f, 100f), "Goats Custom Map Loader V1.8", guistyle);
 			if (GUI.Button(new Rect(10f, 60f, 140f, 40f), "Load Map", guistyle2))
 			{
+				if(clearOnLoad && mapLoaded)
+					ClearMap();
 				loading = true;
 				windowRect = new Rect(10f, 80f, 620f, 800f);
 				Search.SearchFiles();
@@ -257,25 +263,7 @@ namespace MapMod
 			}
 			if (GUI.Button(new Rect(160f, 60f, 140f, 40f), "Clear Maps", guistyle2))
 			{
-				windowRect = new Rect(10f, 80f, 310f, 800f);
-				foreach (GameObject obj in Search.mapGos)
-				{
-					UnityEngine.Object.Destroy(obj);
-				}
-				foreach (GameObject rb in OBJLoader.rbGos)
-				{
-					UnityEngine.Object.Destroy(rb);
-				}
-				foreach (Transform child in ExtrasLoader.allLights.transform)
-				{
-					Destroy(child.gameObject);
-				}
-				OBJLoader.rbGos.Clear();
-				ExtrasLoader.spawnPos.Clear();
-				ExtrasLoader.spawnRot.Clear();
-				mapLoaded = false;
-				timeRemaining = 30f;
-				Resources.UnloadUnusedAssets();
+				ClearMap();
 			}
 			scrollHeight = Search.directoriesFiltered.Count * 60f;
 			scrollPosition = GUI.BeginScrollView(new Rect(10f, 110f, 290f, 600f), scrollPosition, new Rect(0, 0, 270f, scrollHeight));
@@ -308,6 +296,22 @@ namespace MapMod
 					}
 					Search.SearchFiles(true);
 				}
+				GUI.Label(new Rect(460f, 125f, 500f, 100f), "Clear On Load", guistyle4);
+				if(clearOnLoad)
+                {
+					if (GUI.Button(new Rect(310f, 120f, 140f, 40f), "On", guistyle2))
+					{
+						clearOnLoad = false;
+					}
+				}
+				else
+                {
+					if (GUI.Button(new Rect(310f, 120f, 140f, 40f), "Off", guistyle2))
+					{
+						clearOnLoad = true;
+					}
+				}
+				
 				GUI.Label(new Rect(460f, 170f, 500f, 100f), "Lights", guistyle4);
 				if (GUI.Button(new Rect(310f, 200f, 140f, 40f), "On", guistyle2))
 				{
@@ -362,6 +366,29 @@ namespace MapMod
 			GUI.DragWindow(new Rect(0f, 0f, 10000f, 20f));
 		}
 
+		void ClearMap()
+        {
+			windowRect = new Rect(10f, 80f, 310f, 800f);
+			foreach (GameObject obj in Search.mapGos)
+			{
+				UnityEngine.Object.Destroy(obj);
+			}
+			foreach (GameObject rb in OBJLoader.rbGos)
+			{
+				UnityEngine.Object.Destroy(rb);
+			}
+			foreach (Transform child in ExtrasLoader.allLights.transform)
+			{
+				Destroy(child.gameObject);
+			}
+			OBJLoader.rbGos.Clear();
+			ExtrasLoader.spawnPos.Clear();
+			ExtrasLoader.spawnRot.Clear();
+			mapLoaded = false;
+			timeRemaining = 30f;
+			Resources.UnloadUnusedAssets();
+		}
+
 		static RaceCar playerCar;
 
 		static bool menuIsOpen;
@@ -380,7 +407,7 @@ namespace MapMod
 
 		float guiScale = 0.8f;
 
-		float lightRange = 150f;
+		float lightRange = 30f;
 
 		string timerDuration = "30";
 
@@ -409,6 +436,8 @@ namespace MapMod
 		bool loadWindowOnce = false;
 
 		bool loading = false;
+
+		bool clearOnLoad = true;
 
 		Matrix4x4 OGmatrix;
 	}
